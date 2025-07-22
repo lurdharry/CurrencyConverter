@@ -1,0 +1,24 @@
+package com.lurdharry.currencyConverter.adapter.impl;
+
+import com.lurdharry.currencyConverter.adapter.CurrencyAdapter;
+import com.lurdharry.currencyConverter.api.FixerApi.FixerApi;
+import com.lurdharry.currencyConverter.service.Money;
+import lombok.RequiredArgsConstructor;
+import reactor.core.publisher.Mono;
+
+import java.math.BigDecimal;
+
+@RequiredArgsConstructor
+public class FixerApiAdapter implements CurrencyAdapter {
+    private final FixerApi fixerApi;
+
+    @Override
+    public Mono<BigDecimal> convertCurrency(Money money, String toCurrency) {
+        return fixerApi.convertCurrency(money,toCurrency).map(Money::value);
+    }
+
+    @Override
+    public String getProviderName() {
+        return "Fixer";
+    }
+}
