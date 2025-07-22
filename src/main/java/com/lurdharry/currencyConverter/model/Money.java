@@ -1,4 +1,4 @@
-package com.lurdharry.currencyConverter.service;
+package com.lurdharry.currencyConverter.model;
 
 
 import java.math.BigDecimal;

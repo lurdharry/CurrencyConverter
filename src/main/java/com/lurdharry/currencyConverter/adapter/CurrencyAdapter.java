@@ -1,6 +1,6 @@
 package com.lurdharry.currencyConverter.adapter;
 
-import com.lurdharry.currencyConverter.service.Money;
+import com.lurdharry.currencyConverter.model.Money;
 import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;

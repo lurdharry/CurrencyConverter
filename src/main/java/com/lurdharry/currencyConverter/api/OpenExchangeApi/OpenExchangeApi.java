@@ -1,7 +1,7 @@
 package com.lurdharry.currencyConverter.api.OpenExchangeApi;
 
 import com.lurdharry.currencyConverter.api.ApiService;
-import com.lurdharry.currencyConverter.service.Money;
+import com.lurdharry.currencyConverter.model.Money;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;

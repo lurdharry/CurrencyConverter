@@ -2,7 +2,7 @@ package com.lurdharry.currencyConverter.adapter.impl;
 
 import com.lurdharry.currencyConverter.adapter.CurrencyAdapter;
 import com.lurdharry.currencyConverter.api.OpenExchangeApi.OpenExchangeApi;
-import com.lurdharry.currencyConverter.service.Money;
+import com.lurdharry.currencyConverter.model.Money;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
 
