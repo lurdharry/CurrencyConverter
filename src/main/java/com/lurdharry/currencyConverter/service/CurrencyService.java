@@ -1,0 +1,62 @@
+package com.lurdharry.currencyConverter.service;
+
+import com.lurdharry.currencyConverter.adapter.CurrencyAdapter;
+import com.lurdharry.currencyConverter.exceptions.CurrencyConversionException;
+import com.lurdharry.currencyConverter.exceptions.ProviderNotAvailableException;
+import com.lurdharry.currencyConverter.model.Money;
+import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.function.Function;
+
+@Service
+@RequiredArgsConstructor
+@Slf4j
+public class CurrencyService {
+    private final List<CurrencyAdapter> adapters;
+
+    @PostConstruct
+    public void logAdapters() {
+        log.info("Loaded {} currency adapters:", adapters.size());
+        adapters.forEach(adapter -> log.info("- {}", adapter.getProviderName()));
+    }
+
+    public Mono<BigDecimal> convertMoney(Money from,String toCurrency){
+        // Validate input
+        if (from == null || from.value() == null || from.currency() == null) {
+            return Mono.error(new CurrencyConversionException("Invalid input: Money cannot be null"));
+        }
+
+        if (toCurrency == null || toCurrency.isEmpty()) {
+            return Mono.error(new CurrencyConversionException("Invalid input: Target currency cannot be null"));
+        }
+
+        if (from.currency().equals(toCurrency)) {
+            return Mono.just(from.value());
+        }
+
+        return tryAdapter(adapter -> adapter.convertCurrency(from,toCurrency));
+    }
+
+
+    private <T> Mono<T> tryAdapter(Function<CurrencyAdapter, Mono<T>> adapterCall){
+        return Flux.fromIterable(adapters)
+                .concatMap((adapter)->{
+                    log.info("Trying adapter: {}", adapter.getProviderName());
+                    return adapterCall.apply(adapter)
+                            .doOnSuccess(result -> log.info("Success with: {}", adapter.getProviderName()))
+                            .onErrorResume(error ->{
+                                log.warn("Provider {} failed: {}", adapter.getProviderName(), error.getMessage());
+                                return Mono.empty(); // Return empty to try next adapter
+                            });
+                })
+                .next()
+                .switchIfEmpty(Mono.error(new ProviderNotAvailableException("All providers failed.")));
+    }
+}
