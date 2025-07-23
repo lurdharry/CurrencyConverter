@@ -30,7 +30,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ProviderNotAvailableException.class)
     public ResponseEntity<Map<String, Object>> handleProviderException(ProviderNotAvailableException e) {
-//        log.error("Provider error: {}", e.getMessage());
+        log.error("Provider error: {}", e.getMsg());
 
         Map<String, Object> error = new HashMap<>();
         error.put("error", "Service Unavailable");
@@ -42,7 +42,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleGenericException(Exception e) {
-//        log.error("Unexpected error: {}", e.getMessage(), e);
+        log.error("Unexpected error: {}", e.getMessage(), e);
 
         Map<String, Object> error = new HashMap<>();
         error.put("error", "Internal Server Error");

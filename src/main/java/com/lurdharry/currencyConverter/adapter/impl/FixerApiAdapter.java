@@ -4,11 +4,13 @@ import com.lurdharry.currencyConverter.adapter.CurrencyAdapter;
 import com.lurdharry.currencyConverter.api.FixerApi.FixerApi;
 import com.lurdharry.currencyConverter.model.Money;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
 
 @RequiredArgsConstructor
+@Component
 public class FixerApiAdapter implements CurrencyAdapter {
     private final FixerApi fixerApi;
 

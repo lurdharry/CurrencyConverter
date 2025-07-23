@@ -2,23 +2,25 @@ package com.lurdharry.currencyConverter.api.OpenExchangeApi;
 
 import com.lurdharry.currencyConverter.api.ApiService;
 import com.lurdharry.currencyConverter.model.Money;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
 import java.util.Map;
 
+@Component
 public class OpenExchangeApi {
     private  final ApiService apiService;
 
-    private String apiKey = "apikey";
-
-    public OpenExchangeApi(){
-        WebClient.Builder builder = WebClient.builder()
-                .baseUrl("https://openexchangerates.org/api");
-        this.apiService = new ApiService(builder);
+    public OpenExchangeApi(@Qualifier("openExchangeRatesApiService") ApiService apiService) {
+        this.apiService = apiService;
     }
+
+    @Value("${exchange.providers.openexchangerates.api-key}")
+    private String apiKey;
 
     public Mono<Money> convertCurrency(Money money, String toCurrency) {
         Map<String, String> params = Map.of("app_id", apiKey);

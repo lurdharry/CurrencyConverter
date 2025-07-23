@@ -1,6 +1,7 @@
 package com.lurdharry.currencyConverter.api;
 
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
@@ -11,13 +12,10 @@ import java.time.Duration;
 import java.util.Map;
 
 @Slf4j
+@RequiredArgsConstructor
 public class ApiService {
 
     private final WebClient webClient;
-
-    public ApiService(WebClient.Builder builder){
-        this.webClient = builder.build();
-    }
 
     public <T> Mono<T>makeRequest(
             String endpoint,
