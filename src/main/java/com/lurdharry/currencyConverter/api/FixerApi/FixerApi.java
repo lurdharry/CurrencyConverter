@@ -22,17 +22,16 @@ public class FixerApi {
     private String apiKey;
 
 
-    public Mono<FixerLatestRatesResponse> getRates(String fromCurrency) {
+    public Mono<FixerRatesResponse> getRates(String fromCurrencyy) {
         Map<String, String> params = Map.of(
                 "access_key", apiKey,
-                "base", fromCurrency
+                "base", fromCurrencyy
         );
-
         return apiService.makeRequest(
                 "/latest",
                 HttpMethod.GET,params,
                 null,
-                FixerLatestRatesResponse.class
+                FixerRatesResponse.class
         );
     }
 }

@@ -1,13 +1,11 @@
-package com.lurdharry.currencyConverter.api.FixerApi;
+package com.lurdharry.currencyConverter.api.OpenExchangeApi;
 
 import java.math.BigDecimal;
 import java.util.Map;
 
-public record FixerLatestRatesResponse(
-        boolean success,
+public record OpenExchangeRatesResponse(
         long timestamp,
         String base,
-        String date,
         Map<String, BigDecimal> rates
 ) {
 }
