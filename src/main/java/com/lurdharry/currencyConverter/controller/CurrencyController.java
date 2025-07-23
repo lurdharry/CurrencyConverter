@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,17 +21,16 @@ public class CurrencyController {
     private final List<CurrencyAdapter> adapters;
 
     @PostMapping("/convert")
-    public ResponseDTO convert (@Valid @RequestBody ConvertRequest request){
+    public Mono<ResponseDTO> convert (@Valid @RequestBody ConvertRequest request){
         Money fromMoney = new Money(request.amount(), request.from().toUpperCase());
 
-        var res = currencyService.convertMoney(fromMoney,request.to());
-
-        return ResponseDTO.builder()
-                .data(res)
-                .message("Currency converted successfully")
-                .status(HttpStatus.OK.value())
-                .build();
-
+       return currencyService.convertMoney(fromMoney,request.to().toUpperCase()).map(result->
+               ResponseDTO.builder()
+                       .data(result)
+                       .message("Currency converted successfully")
+                       .status(HttpStatus.OK.value())
+                       .build()
+       );
     }
 
     @GetMapping("/providers")

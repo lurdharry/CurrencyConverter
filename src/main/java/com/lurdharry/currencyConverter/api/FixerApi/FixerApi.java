@@ -1,7 +1,6 @@
 package com.lurdharry.currencyConverter.api.FixerApi;
 
 import com.lurdharry.currencyConverter.api.ApiService;
-import com.lurdharry.currencyConverter.model.Money;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
@@ -23,16 +22,17 @@ public class FixerApi {
     private String apiKey;
 
 
-    public Mono<Money> convertCurrency(Money money, String toCurrency) {
+    public Mono<FixerLatestRatesResponse> getRates(String fromCurrency) {
         Map<String, String> params = Map.of(
                 "access_key", apiKey,
-                "from", money.currency(),
-                "to", toCurrency,
-                "amount", String.valueOf(money.value())
+                "base", fromCurrency
         );
 
-        return apiService.makeRequest("/convert", HttpMethod.GET,params,null,ConversionResponseDto.class)
-                .map(res-> new Money(res.result(),toCurrency)
-                );
+        return apiService.makeRequest(
+                "/latest",
+                HttpMethod.GET,params,
+                null,
+                FixerLatestRatesResponse.class
+        );
     }
 }
