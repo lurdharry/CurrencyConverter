@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: currencyConverter
+server:
+  port: 8081
+
+exchange:
+  providers:
+    openexchangerates:
+      api-key: 244baba76a73434e9e85a53400232c09
+      base-url: https://openexchangerates.org/api
+    fixer:
+      api-key: 8bad294c0f4f1217718e9486d64f76c4
+      base-url: https://data.fixer.io/api
