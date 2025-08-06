@@ -27,18 +27,13 @@ public class CurrencyService {
         adapters.forEach(adapter -> log.info("- {}", adapter.getProviderName()));
     }
 
+    public Mono<List<String>> getProviderNames() {
+        return Mono.just(adapters.stream()
+                .map(CurrencyAdapter::getProviderName)
+                .toList());
+    }
+
     public Mono<ConvertResponse> convertMoney(Money from, String toCurrency){
-        if (from == null || from.value() == null || from.currency() == null) {
-            return Mono.error(new CurrencyConversionException("Invalid input: Money cannot be null"));
-        }
-
-        if (toCurrency == null || toCurrency.isEmpty()) {
-            return Mono.error(new CurrencyConversionException("Invalid input: Target currency cannot be null"));
-        }
-
-        if (from.currency().equals(toCurrency)) {
-            return Mono.error(new CurrencyConversionException("Same currency"));
-        }
 
         return tryAdapter(adapter -> adapter.convertCurrency(from,toCurrency));
     }

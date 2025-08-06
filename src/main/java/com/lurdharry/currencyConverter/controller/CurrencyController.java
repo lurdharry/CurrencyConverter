@@ -1,6 +1,5 @@
 package com.lurdharry.currencyConverter.controller;
 
-import com.lurdharry.currencyConverter.adapter.CurrencyAdapter;
 import com.lurdharry.currencyConverter.model.Money;
 import com.lurdharry.currencyConverter.model.ResponseDTO;
 import com.lurdharry.currencyConverter.service.CurrencyService;
@@ -10,15 +9,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
 public class CurrencyController {
     private final CurrencyService currencyService;
-    private final List<CurrencyAdapter> adapters;
+
 
     @PostMapping("/convert")
     public Mono<ResponseDTO> convert (@Valid @RequestBody ConvertRequest request){
@@ -34,9 +30,13 @@ public class CurrencyController {
     }
 
     @GetMapping("/providers")
-    public List<String> getProviders() {
-        return adapters.stream()
-                .map(CurrencyAdapter::getProviderName)
-                .collect(Collectors.toList());
+    public Mono<ResponseDTO> getProviders() {
+        var providers = currencyService.getProviderNames();
+        return  Mono.just(ResponseDTO.builder()
+                .data(providers)
+                .message("Available currency providers")
+                .status(HttpStatus.OK.value())
+                .build()
+        );
     }
 }

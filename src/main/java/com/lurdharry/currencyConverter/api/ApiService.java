@@ -17,7 +17,7 @@ public class ApiService {
 
     private final WebClient webClient;
 
-    public <T> Mono<T>makeRequest(
+    public <T> Mono<T> makeRequest(
             String endpoint,
             HttpMethod method,
             Map<String, String> queryParams,
@@ -27,16 +27,16 @@ public class ApiService {
         return webClient.method(method)
                 .uri(uriBuilder ->{
                     uriBuilder.path(endpoint);
-                    if (queryParams != null) {
+                    if (queryParams != null && !queryParams.isEmpty()) {
                         queryParams.forEach(uriBuilder::queryParam);
-
                     }
                     return  uriBuilder.build();
                 })
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(requestBody != null? requestBody:"")
+                .bodyValue(requestBody == null? "" : requestBody)
                 .retrieve()
                 .bodyToMono(responseType)
-                .timeout(Duration.ofSeconds(10));
+                .timeout(Duration.ofSeconds(10))
+                .doOnError(e -> log.error("Error making API request: {}", e.getMessage()));
     }
 }

@@ -21,9 +21,8 @@ public class OpenExchangeApi {
     private String apiKey;
 
     public Mono<OpenExchangeRatesResponse> convertCurrency( String fromCurrency) {
-        Map<String, String> params = Map.of(
-                "app_id", apiKey
-//                "base", fromCurrency
+        Map<String, String> params = Map.ofEntries(
+                Map.entry("app_id", apiKey)
         );
 
         return apiService.makeRequest(

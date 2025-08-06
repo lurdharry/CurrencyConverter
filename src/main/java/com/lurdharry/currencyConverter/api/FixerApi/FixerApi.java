@@ -12,7 +12,7 @@ import java.util.Map;
 @Component
 public class FixerApi {
 
-    private  final ApiService apiService;
+    private final ApiService apiService;
 
     public FixerApi(@Qualifier("fixerApiService") ApiService apiService) {
         this.apiService = apiService;
@@ -23,9 +23,9 @@ public class FixerApi {
 
 
     public Mono<FixerRatesResponse> getRates(String fromCurrency) {
-        Map<String, String> params = Map.of(
-                "access_key", apiKey,
-                "base", fromCurrency
+        Map<String, String> params = Map.ofEntries(
+                Map.entry(   "access_key", apiKey),
+                Map.entry( "base", fromCurrency)
         );
         return apiService.makeRequest(
                 "/latest",

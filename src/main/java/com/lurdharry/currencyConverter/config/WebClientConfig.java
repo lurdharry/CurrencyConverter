@@ -1,8 +1,8 @@
 package com.lurdharry.currencyConverter.config;
 
-
 import com.lurdharry.currencyConverter.api.ApiService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -14,17 +14,22 @@ public class WebClientConfig {
     private final ExchangeProviderProperties properties;
 
     @Bean
+    @Qualifier("openExchangeRates")
     public ApiService openExchangeRatesApiService() {
-        String baseUrl = properties.getProviders().get("openexchangerates").getBaseUrl();
-        WebClient webClient = WebClient.builder().baseUrl(baseUrl).build();
-        return new ApiService(webClient);
+        return new ApiService(createWebClient("openexchangerates"));
     }
 
-
     @Bean
+    @Qualifier("fixer")
     public ApiService fixerApiService() {
-        String baseUrl = properties.getProviders().get("fixer").getBaseUrl();
-        WebClient webClient = WebClient.builder().baseUrl(baseUrl).build();
-        return new ApiService(webClient);
+        return new ApiService(createWebClient("fixer"));
+    }
+
+    private WebClient createWebClient(String providerKey) {
+        String baseUrl = properties.getProviders()
+                .get(providerKey)
+                .getBaseUrl();
+        return WebClient.builder().baseUrl(baseUrl)
+                .build();
     }
 }

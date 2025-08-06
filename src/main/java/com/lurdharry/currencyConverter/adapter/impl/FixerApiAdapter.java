@@ -8,6 +8,7 @@ import com.lurdharry.currencyConverter.model.Money;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
@@ -15,6 +16,11 @@ import java.math.BigDecimal;
 @RequiredArgsConstructor
 @Component
 @Slf4j
+@Validated
+/**
+ * Adapter implementation for the Fixer.io currency conversion API.
+ * Handles currency conversion requests using Fixer.io as the data provider.
+ */
 public class FixerApiAdapter implements CurrencyAdapter {
     private final FixerApi fixerApi;
 
@@ -37,8 +43,9 @@ public class FixerApiAdapter implements CurrencyAdapter {
                            .build();
 
                    return Mono.just(res);
-               }
-       );
+               }).onErrorMap(
+               e-> new CurrencyConversionException("Error converting currency using Fixer API: " + e.getMessage())
+               );
     }
 
     @Override

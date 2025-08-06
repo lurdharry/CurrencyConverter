@@ -25,7 +25,6 @@ public class GlobalExceptionHandler {
         error.put("timeStamp", LocalDateTime.now());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
-
     }
 
     @ExceptionHandler(ProviderNotAvailableException.class)

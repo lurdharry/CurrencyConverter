@@ -5,9 +5,16 @@ import lombok.Builder;
 
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public record ResponseDTO(
+/**
+ * Generic response object for API endpoints
+ * @param status HTTP status code or custom status
+ * @param message Response message
+ * @param data Response payload
+ * @param <T> Type of the response data
+ */
+public record ResponseDTO<T>(
         Integer status,
         String message,
-        Object data
+        T data
 ) {
 }

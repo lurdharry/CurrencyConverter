@@ -10,6 +10,5 @@ public record ConvertResponse(
         BigDecimal rate,
         BigDecimal convertedAmount,
         Money fromData
-
 ) {
 }
